@@ -1,0 +1,90 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://resources/themes/default_dynamicfont.tres" type="DynamicFont" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Control
+
+
+func _ready() -> void:
+	BGM.play_bgm(\"info_loop\")
+	
+	for i in BGM.bgms:
+		$Musics.add_item(i)
+
+
+func _on_Musics_item_selected(index: int) -> void:
+	print($Musics.get_item_text(index))
+
+
+func _on_Play_pressed() -> void:
+	var m : String = $Musics.get_item_text($Musics.selected)
+	BGM.play_bgm(m)
+
+
+func _on_Stop_pressed() -> void:
+	BGM.stop_bgm()
+
+"
+
+[node name="Information" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = SubResource( 1 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 155.0
+margin_top = 207.0
+margin_right = -158.0
+margin_bottom = -206.0
+custom_fonts/font = ExtResource( 1 )
+text = "UncreativeAri 2D template for internal development. Made this because I am tired of typing the same code over and over.
+
+Singletons:
+- Global, to store global variables. Settings and player infos are a good example.
+- SceneLoader, to load scenes and adds them to root immediately. Previous scene is not queue_free'd, allows for custom behavior by yielding done signal.
+- LoadingIndicator, used by SceneLoader to indicate loading. Allows for custom behaviour because it is a separate singleton.
+- BGM, for... playing music (duh). But it has crossfade, so yeah."
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Play" type="Button" parent="."]
+margin_left = 569.0
+margin_top = 556.0
+margin_right = 642.0
+margin_bottom = 576.0
+text = "Play BGM"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Stop" type="Button" parent="."]
+margin_left = 654.0
+margin_top = 556.0
+margin_right = 729.0
+margin_bottom = 576.0
+text = "Stop BGM"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Musics" type="OptionButton" parent="."]
+margin_left = 570.0
+margin_top = 639.0
+margin_right = 599.0
+margin_bottom = 659.0
+selected = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="Play" to="." method="_on_Play_pressed"]
+[connection signal="pressed" from="Stop" to="." method="_on_Stop_pressed"]
+[connection signal="item_selected" from="Musics" to="." method="_on_Musics_item_selected"]
