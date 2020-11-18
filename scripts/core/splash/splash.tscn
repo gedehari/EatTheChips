@@ -13,7 +13,7 @@ __meta__ = {
 "_edit_lock_": true,
 "_edit_use_anchors_": false
 }
-entry_point = "res://scripts/information.tscn"
+entry_point = "res://scripts/ui/main_menu/main_menu.tscn"
 
 [node name="CreatorLogo" type="Sprite" parent="."]
 position = Vector2( 640, 307 )

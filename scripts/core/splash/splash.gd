@@ -66,7 +66,7 @@ func _on_timer_timeout() -> void:
 		return
 	
 	# FINALLY, if no errors, run the scene
-	SceneLoader.load_scene("res://scripts/information.tscn")
+	SceneLoader.load_scene(entry_point)
 	
 	yield(SceneLoader, "done")
 	

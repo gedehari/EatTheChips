@@ -7,8 +7,7 @@ var busy : bool = false
 
 # Define BGM here.
 var bgms : Dictionary = {
-	"info_loop" : preload("res://resources/audio/bgm/info_loop.ogg"),
-	"info_loop2" : preload("res://resources/audio/bgm/info_loop2.ogg")
+	"menu" : preload("res://resources/audio/bgm/menu.ogg")
 }
 
 
