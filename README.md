@@ -2,9 +2,13 @@
 
 ### Summary
 
-ETC is a game where you eat chips. But there's a catch, you need to eat as many chips as you can while opponents try and stop you using **STUN POWERS** and keep the chips to themselves! Have fun with your friends in this intense arena battle to see who truly earns the title of **COUCH POTATO.**
+ETC is a game where you eat chips. But there's a catch, you need to eat as many chips as you can while opponents try and stop you using **STUN POWERS** and keep the chips to themselves! (don't worry you've learned the art of STUN too). Have fun with your friends in this intense arena battle to see who truly earns the title of **COUCH POTATO.**
 
 This game is open-source under a license, see below.
+
+## Progress
+
+We just started developing! Nothing has been done yet (as of writing). Prototype will be available in v.0.0-prototype.
 
 ### Team
 
