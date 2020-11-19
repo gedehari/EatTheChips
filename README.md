@@ -12,4 +12,4 @@ UncreativeAri (me) is doing all the work (programming and art), and my buddy Dyo
 
 ### License
 
-This repo is dual-licensed. See [README.md](README.md) for more information.
+This repo is dual-licensed. See [LICENSE.md](LICENSE.md) for more information.
