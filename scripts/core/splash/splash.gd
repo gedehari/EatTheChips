@@ -56,13 +56,19 @@ func _on_timer_timeout() -> void:
 	# Check if a scene is defined
 	if entry_point.empty():
 		modulate.a = 1
-		error_label.text = "No scene entry point defined. THERE IS NO GAME!!"
+		error_label.text = "No scene entry point scene defined."
 		return
 	
 	# Check if a scene loops back to this scene
 	if entry_point == filename:
 		modulate.a = 1
-		error_label.text = "You can't just link back to this scene! That is illegal!"
+		error_label.text = "You can't just link back to this scene!"
+		return
+	
+	# Check if scene exists
+	if not ResourceLoader.exists(entry_point):
+		modulate.a = 1
+		error_label.text = "Scene entry point not found. Check if there is any typo."
 		return
 	
 	# FINALLY, if no errors, run the scene

@@ -7,7 +7,7 @@ var busy : bool = false
 
 # Define BGM here.
 var bgms : Dictionary = {
-	"menu" : preload("res://resources/audio/bgm/menu.ogg")
+	# TODO: add bgm, i cant make music :(
 }
 
 
