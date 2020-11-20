@@ -23,12 +23,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 Files affected:
+```
 scripts/\*
+```
 
 # Creative Commons Attribution-NonCommercial 4.0 International
 
 Visit [https://creativecommons.org/licenses/by-nc/4.0/](https://creativecommons.org/licenses/by-nc/4.0/)
 
 Files affected:
-resources/\*
-resources-raw/\*
+```
+resources/textures
+resources-raw/*
+```
