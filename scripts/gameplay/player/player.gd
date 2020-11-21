@@ -8,6 +8,8 @@ onready var arrow = $Arrow
 onready var dash_timer = $DashTimer              # Dash timer
 onready var dash_cd_timer = $DashCooldownTimer   # Dash cooldown timer.
 
+onready var debug_label = $DebugLabel
+
 var la_rot : float
 var vel : Vector2
 
@@ -19,7 +21,7 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	$DebugLabel.text = "Dashing: " + str(is_dashing) + ", DashTimer: " + str(dash_timer.time_left) + ", DashCD: " + str(int(dash_cd_timer.time_left))
+	debug_label.text = str(is_dashing) + ", " + str(dash_timer.time_left) + ", " + str(int(dash_cd_timer.time_left))
 
 
 func _physics_process(delta: float) -> void:
@@ -46,3 +48,7 @@ func move() -> void:
 	else:
 		la_rot = look_at_node.rotation
 		applied_force = vel * speed
+
+
+func _on_Player_body_entered(body: Node) -> void:
+	dash_timer.stop()

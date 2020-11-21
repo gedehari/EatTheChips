@@ -51,6 +51,34 @@ position = Vector2( 51.5, 0 )
 points = PoolVector2Array( 16, 13, 30, 0 )
 width = 5.0
 
+[node name="PlayerName" type="Label" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -270.0
+margin_top = -74.0
+margin_right = 270.0
+margin_bottom = -46.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Player"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DebugLabel" type="Label" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -240.5
+margin_top = 41.0
+margin_right = 240.5
+margin_bottom = 69.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "false, 0, 0"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="DashTimer" type="Timer" parent="."]
 wait_time = 0.67
 one_shot = true
@@ -58,17 +86,4 @@ one_shot = true
 [node name="DashCooldownTimer" type="Timer" parent="."]
 wait_time = 20.0
 one_shot = true
-
-[node name="DebugLabel" type="Label" parent="."]
-anchor_left = 0.5
-anchor_right = 0.5
-margin_left = -274.5
-margin_top = -112.357
-margin_right = 274.5
-margin_bottom = -22.357
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-text = "Dashing: false, DashTimer: 0, DashCD: 0"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[connection signal="body_entered" from="." to="." method="_on_Player_body_entered"]

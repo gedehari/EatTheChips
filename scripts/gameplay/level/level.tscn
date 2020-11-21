@@ -1,0 +1,44 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scripts/gameplay/level/wall.tscn" type="PackedScene" id=1]
+
+[node name="Level" type="Node2D"]
+
+[node name="SpawnPoints" type="Node2D" parent="."]
+
+[node name="1" type="Position2D" parent="SpawnPoints"]
+position = Vector2( 641, 340 )
+
+[node name="2" type="Position2D" parent="SpawnPoints"]
+position = Vector2( 974, 340 )
+
+[node name="3" type="Position2D" parent="SpawnPoints"]
+position = Vector2( 641, 490 )
+
+[node name="4" type="Position2D" parent="SpawnPoints"]
+position = Vector2( 974, 490 )
+
+[node name="Wall" parent="." instance=ExtResource( 1 )]
+position = Vector2( 75, 297 )
+rotation = -0.377722
+scale = Vector2( 24.76, 1 )
+
+[node name="Wall4" parent="." instance=ExtResource( 1 )]
+position = Vector2( 75, 297 )
+rotation = 1.0472
+scale = Vector2( 24.76, 1 )
+
+[node name="Wall5" parent="." instance=ExtResource( 1 )]
+position = Vector2( 435, 968 )
+rotation = -0.261799
+scale = Vector2( 30.3629, 1.05653 )
+
+[node name="Wall2" parent="." instance=ExtResource( 1 )]
+position = Vector2( 811, 5 )
+rotation = 0.187198
+scale = Vector2( 18.3039, 1 )
+
+[node name="Wall3" parent="." instance=ExtResource( 1 )]
+position = Vector2( 1386, 115 )
+rotation = 1.5708
+scale = Vector2( 19.8639, 1 )
