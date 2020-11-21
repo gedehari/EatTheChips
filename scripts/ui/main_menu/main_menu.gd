@@ -9,12 +9,16 @@ func _ready() -> void:
 	get_tree().connect("connected_to_server", self, "_on_connected")
 	get_tree().connect("connection_failed", self, "_on_connection_failed")
 	
-	Network.connect("player_list_changed", self, "update_lobby")
+	Network.connect("player_list_changed", self, "_update_lobby")
+	Network.connect("player_ready_changed", self, "_update_player_ready")
+	Network.connect("game_initializing", self, "_on_game_initializing")
 	
 	#BGM.play_bgm("menu")
 	
 	$Choices.show()
 	$Lobby.hide()
+	
+	$Lobby/Status.hide()
 
 
 func _to_lobby() -> void:
@@ -26,10 +30,10 @@ func _to_lobby() -> void:
 
 
 func _on_HostBtn_pressed() -> void:
-	if $Choices/NameLE.text.empty():
+	if $Choices/NameField.text.empty():
 		return
 	
-	Global.player_info["name"] = $Choices/NameLE.text
+	Global.player_info["name"] = $Choices/NameField.text
 	
 	Network.create_server()
 	
@@ -37,10 +41,10 @@ func _on_HostBtn_pressed() -> void:
 
 
 func _on_JoinBtn_pressed() -> void:
-	if $Choices/NameLE.text.empty():
+	if $Choices/NameField.text.empty():
 		return
 	
-	Global.player_info["name"] = $Choices/NameLE.text
+	Global.player_info["name"] = $Choices/NameField.text
 	
 	Network.join_server("127.0.0.1")
 	
@@ -58,7 +62,7 @@ func _on_connection_failed() -> void:
 
 ## Lobby crap
 
-func update_lobby() -> void:
+func _update_lobby() -> void:
 	var text : String = "Connected players:"
 	
 	for player in Network.players:
@@ -74,10 +78,34 @@ func update_lobby() -> void:
 			text += " (Ready)"
 	
 	$Lobby/PlayerList.text = text
+	
+	# Set default status text. Only server will see this since
+	# logically server start with one player, which is the host.
+	var status_text : String = "Cannot start a game with only yourself."
+	
+	# Everyone sees this
+	if Network.players.size() > 1:
+		status_text = "Waiting for players to ready up..."
+	
+	$Lobby/Status.text = status_text
 
 
-func _on_Button_toggled(button_pressed: bool) -> void:
+func _update_player_ready() -> void:
+	# Temporary, will be replaced by something better
+	_update_lobby()
+
+
+func _on_game_initializing() -> void:
+	$Lobby/ReadyBtn.disabled = true
+	
+	yield(get_tree(), "idle_frame")
+	$Lobby/Status.text = "Starting game..."
+
+
+func _on_ReadyBtn_toggled(button_pressed: bool) -> void:
 	if get_tree().is_network_server():
 		Network.ready_player(1, button_pressed)
 	else:
 		Network.rpc_id(1, "ready_player", get_tree().get_network_unique_id(), button_pressed)
+	
+	$Lobby/Status.visible = button_pressed

@@ -26,33 +26,52 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="NameLE" type="LineEdit" parent="Choices"]
+[node name="NameField" type="LineEdit" parent="Choices"]
 margin_right = 171.0
 margin_bottom = 38.0
-text = "Player"
 align = 1
 max_length = 10
+placeholder_text = "Name"
 
-[node name="CustomizeBtn" type="Button" parent="Choices"]
+[node name="Spacer" type="Control" parent="Choices"]
 margin_top = 42.0
 margin_right = 171.0
-margin_bottom = 76.0
+margin_bottom = 57.0
+rect_min_size = Vector2( 0, 15 )
+
+[node name="CustomizeBtn" type="Button" parent="Choices"]
+margin_top = 61.0
+margin_right = 171.0
+margin_bottom = 95.0
 custom_fonts/font = ExtResource( 1 )
 text = "Customize"
 
 [node name="HostBtn" type="Button" parent="Choices"]
-margin_top = 80.0
+margin_top = 99.0
 margin_right = 171.0
-margin_bottom = 114.0
+margin_bottom = 133.0
 custom_fonts/font = ExtResource( 1 )
 text = "Host"
 
 [node name="JoinBtn" type="Button" parent="Choices"]
-margin_top = 118.0
+margin_top = 137.0
 margin_right = 171.0
-margin_bottom = 152.0
+margin_bottom = 171.0
 custom_fonts/font = ExtResource( 1 )
 text = "Join"
+
+[node name="Spacer2" type="Control" parent="Choices"]
+margin_top = 175.0
+margin_right = 171.0
+margin_bottom = 190.0
+rect_min_size = Vector2( 0, 15 )
+
+[node name="IpField" type="LineEdit" parent="Choices"]
+margin_top = 194.0
+margin_right = 171.0
+margin_bottom = 232.0
+align = 1
+placeholder_text = "IP"
 
 [node name="Lobby" type="Control" parent="."]
 anchor_right = 1.0
@@ -76,7 +95,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Button" type="Button" parent="Lobby"]
+[node name="ReadyBtn" type="Button" parent="Lobby"]
 anchor_left = 0.5
 anchor_right = 0.5
 margin_left = -34.0
@@ -88,6 +107,19 @@ text = "Ready"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Status" type="Label" parent="Lobby"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -285.0
+margin_top = 11.7726
+margin_right = 285.0
+margin_bottom = 39.7726
+text = "Status"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="pressed" from="Choices/HostBtn" to="." method="_on_HostBtn_pressed"]
 [connection signal="pressed" from="Choices/JoinBtn" to="." method="_on_JoinBtn_pressed"]
-[connection signal="toggled" from="Lobby/Button" to="." method="_on_Button_toggled"]
+[connection signal="toggled" from="Lobby/ReadyBtn" to="." method="_on_ReadyBtn_toggled"]

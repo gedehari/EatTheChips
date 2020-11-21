@@ -25,10 +25,10 @@ config/icon="res://icon.png"
 
 [autoload]
 
-Global="*res://scripts/core/global/global.gd"
-Network="*res://scripts/core/network/network.gd"
-SceneLoader="*res://scripts/core/scene_loader/scene_loader.gd"
-BGM="*res://scripts/core/bgm/bgm.gd"
+Global="*res://scripts/core/global.gd"
+Network="*res://scripts/core/network.gd"
+SceneLoader="*res://scripts/core/scene_loader.gd"
+BGM="*res://scripts/core/bgm.gd"
 
 [display]
 

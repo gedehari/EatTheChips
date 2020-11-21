@@ -1,6 +1,10 @@
 extends Node
 
 signal player_list_changed
+signal player_ready_changed
+
+signal game_initializing
+signal game_initializing_aborted
 
 # Essential server information
 const PORT = 23719
@@ -11,6 +15,13 @@ var enet : NetworkedMultiplayerENet
 
 # Contains registered players.
 var players : Dictionary = {}
+
+enum {
+	STATE_IDLE,
+	STATE_INITIALIZE,
+	STATE_GAME
+}
+var state : int = STATE_IDLE
 
 
 func _ready() -> void:
@@ -33,6 +44,13 @@ func _on_peer_connected(id : int) -> void:
 func _on_peer_disconnected(id : int) -> void:
 	print("Peer ID " + str(id) + " disconnected.")
 	call_deferred("_unregister_player", id)
+	
+	if get_tree().is_network_server():
+		if state == STATE_INITIALIZE:
+			rpc("_abort_initialize_game")
+		elif state == STATE_GAME:
+			pass
+			# Maybe add something like: rpc("_end_game", true)
 
 # Client only
 
@@ -113,5 +131,24 @@ remote func ready_player(id : int, is_ready) -> void:
 		for target_id in players:
 			if target_id != 1:
 				rpc_id(target_id, "ready_player", id, is_ready)
+		# Check if everyone is ready
+		var ready_counter : int = 0
+		for id in players:
+			var rd : bool = players[id]["ready"]
+			if rd:
+				ready_counter += 1
+		if players.size() > 1 and ready_counter == players.size():
+			rpc("_pre_initialize_game")
 	
-	emit_signal("player_list_changed")
+	emit_signal("player_ready_changed")
+
+## Game management
+
+remotesync func _pre_initialize_game() -> void:
+	state = STATE_INITIALIZE
+	emit_signal("game_initializing")
+
+
+remotesync func _abort_initialize_game() -> void:
+	state = STATE_IDLE
+	emit_signal("game_initializing_aborted")
