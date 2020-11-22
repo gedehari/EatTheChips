@@ -13,6 +13,7 @@ __meta__ = {
 }
 
 [node name="Choices" type="VBoxContainer" parent="."]
+visible = false
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -74,23 +75,30 @@ align = 1
 placeholder_text = "IP"
 
 [node name="Lobby" type="Control" parent="."]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="PlayerList" type="Label" parent="Lobby"]
+[node name="ExitLobbyBtn" type="Button" parent="Lobby"]
+margin_left = 74.0836
+margin_top = 50.5097
+margin_right = 181.084
+margin_bottom = 84.5097
+text = "Exit Lobby"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Status" type="Label" parent="Lobby"]
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = -640.0
-margin_top = 114.0
-margin_right = 640.0
-margin_bottom = 173.0
-custom_fonts/font = ExtResource( 1 )
-text = "Connected players:
-Player (You)"
+margin_left = -285.0
+margin_top = 11.7726
+margin_right = 285.0
+margin_bottom = 39.7726
+text = "Status"
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -109,18 +117,21 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Status" type="Label" parent="Lobby"]
+[node name="PlayerList" type="Label" parent="Lobby"]
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = -285.0
-margin_top = 11.7726
-margin_right = 285.0
-margin_bottom = 39.7726
-text = "Status"
+margin_left = -640.0
+margin_top = 114.0
+margin_right = 640.0
+margin_bottom = 173.0
+custom_fonts/font = ExtResource( 1 )
+text = "Connected players:
+Player (You)"
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 [connection signal="pressed" from="Choices/HostBtn" to="." method="_on_HostBtn_pressed"]
 [connection signal="pressed" from="Choices/JoinBtn" to="." method="_on_JoinBtn_pressed"]
+[connection signal="pressed" from="Lobby/ExitLobbyBtn" to="." method="_on_ExitLobbyBtn_pressed"]
 [connection signal="toggled" from="Lobby/ReadyBtn" to="." method="_on_ReadyBtn_toggled"]

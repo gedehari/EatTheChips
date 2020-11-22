@@ -7,6 +7,7 @@ var screens : Dictionary = {
 
 func _ready() -> void:
 	get_tree().connect("connected_to_server", self, "_on_connected")
+	get_tree().connect("server_disconnected", self, "_to_menu")
 	get_tree().connect("connection_failed", self, "_on_connection_failed")
 	
 	Network.connect("player_list_changed", self, "_update_lobby")
@@ -28,6 +29,11 @@ func _to_lobby() -> void:
 	
 	$Choices.hide()
 	$Lobby.show()
+
+
+func _to_menu() -> void:
+	$Choices.show()
+	$Lobby.hide()
 
 
 func _on_HostBtn_pressed() -> void:
@@ -116,3 +122,8 @@ func _on_ReadyBtn_toggled(button_pressed: bool) -> void:
 		Network.rpc_id(1, "ready_player", get_tree().get_network_unique_id(), button_pressed)
 	
 	$Lobby/Status.visible = button_pressed
+
+
+func _on_ExitLobbyBtn_pressed() -> void:
+	Network.call_deferred("close_network")
+	_to_menu()

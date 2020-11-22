@@ -5,6 +5,7 @@ signal player_ready_changed
 
 signal game_initializing
 signal game_initializing_aborted
+signal game_end
 
 # Essential server information
 const PORT = 23719
@@ -57,8 +58,7 @@ func _on_peer_disconnected(id : int) -> void:
 		if state == STATE_INITIALIZE:
 			rpc("_abort_initialize_game")
 		elif state == STATE_GAME:
-			pass
-			# Maybe add something like: rpc("_end_game", true)
+			rpc("_end_game")
 
 # Client only
 
@@ -69,6 +69,9 @@ func _on_connected() -> void:
 
 func _on_disconnected() -> void:
 	print("Disconnected from server.")
+	
+	if state == STATE_GAME:
+		_end_game()
 
 
 func _on_connection_failed() -> void:
@@ -167,6 +170,7 @@ remote func _initialize_game() -> void:
 			if target_id != 1:
 				rpc_id(target_id, "_initialize_game")
 	
+	state = STATE_GAME
 	get_tree().current_scene.queue_free()
 	SceneLoader.load_scene("res://scripts/gameplay/stage/stage.tscn")
 
@@ -177,4 +181,16 @@ remotesync func _abort_initialize_game() -> void:
 	if get_tree().is_network_server():
 		init_timer.stop()
 	
+	close_network()
+	
 	emit_signal("game_initializing_aborted")
+
+
+remotesync func _end_game() -> void:
+	state = STATE_IDLE
+	
+	if get_tree().current_scene.filename == "res://scripts/gameplay/stage/stage.tscn":
+		get_tree().current_scene.queue_free()
+		SceneLoader.load_scene("res://scripts/ui/main_menu/main_menu.tscn")
+	
+	emit_signal("game_end")
