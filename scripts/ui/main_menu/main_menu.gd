@@ -12,6 +12,7 @@ func _ready() -> void:
 	Network.connect("player_list_changed", self, "_update_lobby")
 	Network.connect("player_ready_changed", self, "_update_player_ready")
 	Network.connect("game_initializing", self, "_on_game_initializing")
+	Network.connect("game_initializing_aborted", self, "_on_initializing_aborted")
 	
 	#BGM.play_bgm("menu")
 	
@@ -82,15 +83,16 @@ func _update_lobby() -> void:
 	
 	$Lobby/PlayerList.text = text
 	
-	# Set default status text. Only server will see this since
-	# logically server start with one player, which is the host.
-	var status_text : String = "Cannot start a game with only yourself."
-	
-	# Everyone sees this
-	if Network.players.size() > 1:
-		status_text = "Waiting for players to ready up..."
-	
-	$Lobby/Status.text = status_text
+	if Network.state == Network.STATE_IDLE:
+		# Set default status text. Only server will see this since
+		# logically server start with one player, which is the host.
+		var status_text : String = "Cannot start a game with only yourself."
+		
+		# Everyone sees this
+		if Network.players.size() > 1:
+			status_text = "Waiting for players to ready up..."
+		
+		$Lobby/Status.text = status_text
 
 
 func _update_player_ready() -> void:
@@ -100,9 +102,11 @@ func _update_player_ready() -> void:
 
 func _on_game_initializing() -> void:
 	$Lobby/ReadyBtn.disabled = true
-	
-	yield(get_tree(), "idle_frame")
 	$Lobby/Status.text = "Starting game..."
+
+
+func _on_initializing_aborted() -> void:
+	$Lobby/ReadyBtn.disabled = false
 
 
 func _on_ReadyBtn_toggled(button_pressed: bool) -> void:

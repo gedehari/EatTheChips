@@ -23,6 +23,8 @@ enum {
 }
 var state : int = STATE_IDLE
 
+var init_timer : Timer
+
 
 func _ready() -> void:
 	# Called in both client and server
@@ -32,6 +34,12 @@ func _ready() -> void:
 	get_tree().connect("connected_to_server", self, "_on_connected")
 	get_tree().connect("server_disconnected", self, "_on_disconnected")
 	get_tree().connect("connection_failed", self, "_on_connection_failed")
+	
+	init_timer = Timer.new()
+	init_timer.one_shot = true
+	init_timer.wait_time = 2
+	add_child(init_timer)
+	init_timer.connect("timeout", self, "_initialize_game")
 
 ## SceneTree callbacks
 
@@ -146,9 +154,27 @@ remote func ready_player(id : int, is_ready) -> void:
 
 remotesync func _pre_initialize_game() -> void:
 	state = STATE_INITIALIZE
+	
+	if get_tree().is_network_server():
+		init_timer.start()
+	
 	emit_signal("game_initializing")
+
+
+remote func _initialize_game() -> void:
+	if get_tree().is_network_server() and players.size() > 1:
+		for target_id in players:
+			if target_id != 1:
+				rpc_id(target_id, "_initialize_game")
+	
+	get_tree().current_scene.queue_free()
+	SceneLoader.load_scene("res://scripts/gameplay/stage/stage.tscn")
 
 
 remotesync func _abort_initialize_game() -> void:
 	state = STATE_IDLE
+	
+	if get_tree().is_network_server():
+		init_timer.stop()
+	
 	emit_signal("game_initializing_aborted")
