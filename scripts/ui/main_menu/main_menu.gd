@@ -44,9 +44,12 @@ func _on_JoinBtn_pressed() -> void:
 	if $Choices/NameField.text.empty():
 		return
 	
+	if not $Choices/IpField.text.is_valid_filename():
+		return
+	
 	Global.player_info["name"] = $Choices/NameField.text
 	
-	Network.join_server("127.0.0.1")
+	Network.join_server($Choices/IpField.text)
 	
 	$Choices/HostBtn.disabled = true
 	$Choices/JoinBtn.disabled = true
