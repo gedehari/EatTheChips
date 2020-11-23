@@ -30,6 +30,8 @@ func _ready() -> void:
 			
 			# Set starting pos
 			p_ins.position = spawn_points.get_node(str(spawn_counter)).position
+			
+			spawn_counter += 1
 		
 		my_player = arena.get_node(Network.players[get_tree().get_network_unique_id()]["player_info"]["name"])
 	# If not, then this scene must have been run on the editor
