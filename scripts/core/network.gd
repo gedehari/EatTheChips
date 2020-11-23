@@ -104,12 +104,12 @@ func join_server(ip : String) -> void:
 
 
 func close_network() -> void:
-	var verb : String
+	var verb : String = "Network"
 	
-	if get_tree().is_network_server(): verb = "Server"
-	else: "Client"
-	
-	if enet:
+	if enet or get_tree().network_peer:
+		if get_tree().is_network_server(): verb = "Server"
+		else: "Client"
+		
 		enet.close_connection()
 		enet = null
 	
@@ -191,7 +191,7 @@ remotesync func _abort_initialize_game() -> void:
 	if get_tree().is_network_server():
 		init_timer.stop()
 	
-	close_network()
+	call_deferred("close_network")
 	
 	emit_signal("game_initializing_aborted")
 
@@ -202,5 +202,7 @@ remotesync func _end_game() -> void:
 	if get_tree().current_scene.filename == "res://scripts/gameplay/stage/stage.tscn":
 		get_tree().current_scene.queue_free()
 		SceneLoader.load_scene("res://scripts/ui/main_menu/main_menu.tscn")
+	
+	call_deferred("close_network")
 	
 	emit_signal("game_end")
