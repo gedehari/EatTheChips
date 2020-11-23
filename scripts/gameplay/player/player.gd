@@ -11,6 +11,12 @@ onready var dash_cd_timer = $DashCooldownTimer   # Dash cooldown timer.
 
 onready var debug_label = $DebugLabel
 
+# To avoid errors
+var is_master : bool = false
+
+# It's not like I'm creating a server everytime I want to test the player.
+var test_mode : bool = false
+
 var la_rot : float
 var vel : Vector2
 
@@ -18,21 +24,33 @@ var is_dashing : bool = false
 
 
 func _ready() -> void:
-	arrow.visible = is_network_master()
-	debug_label.visible = is_network_master()
+	if Network.enet:
+		# Check if this player is a master or a puppet
+		is_master = is_network_master()
+	
+	if get_tree().current_scene == self:
+		# If this is the current scene, enable test mode.
+		test_mode = true
+	
+	arrow.visible = is_master or test_mode
+	debug_label.visible = is_master or test_mode
 
 
 func _process(delta: float) -> void:
-	debug_label.text = str(is_dashing) + ", " + str(dash_timer.time_left) + ", " + str(int(dash_cd_timer.time_left))
+	if is_master or test_mode:
+		debug_label.text = str(is_dashing) + ", " + str(dash_timer.time_left) + ", " + str(int(dash_cd_timer.time_left))
 
 
 func _physics_process(delta: float) -> void:
-	if is_network_master():
+	if is_master or test_mode:
 		# Update arrow rotation, but with lerp
 		arrow.rotation = lerp_angle(arrow.rotation, la_rot, 0.175)
-		
+		# Do movement
 		move()
-		rpc_unreliable("_set_state", position, linear_velocity, applied_force)
+		
+		if Network.enet:
+			# Send state every physics process. I don't know if this is a good idea or not.
+			rpc_unreliable("_set_state", position, linear_velocity, applied_force)
 
 
 puppet func _set_state(pos : Vector2, vel : Vector2, frc : Vector2) -> void:
@@ -49,7 +67,7 @@ func move() -> void:
 		dash_timer.start()
 	
 	if is_dashing:
-		# Not applying rotation here, effectively freezing the rotation here.
+		# Not applying rotation here, effectively freezing the rotation.
 		linear_velocity = vel * speed * 1.5
 		
 		if dash_timer.is_stopped():
@@ -61,4 +79,5 @@ func move() -> void:
 
 
 func _on_Player_body_entered(body: Node) -> void:
+	# Stop dash if player hits anything.
 	dash_timer.stop()

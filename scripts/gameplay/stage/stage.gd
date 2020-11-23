@@ -36,7 +36,23 @@ func _ready() -> void:
 	# because in normal occasions, it is impossible to get here
 	# without network initialized.
 	else:
-		pass
+		var p_name : String = Global.player_info["name"]
+			
+		# Instance player
+		var p_ins = player_scn.instance()
+		
+		p_ins.test_mode = true
+		
+		arena.add_child(p_ins)
+		
+		# Set player name on node name and label.
+		p_ins.name = p_name
+		p_ins.player_name.text = p_name
+		
+		# Set starting pos
+		p_ins.position = spawn_points.get_node("1").position
+		
+		my_player = p_ins
 
 
 func _physics_process(delta: float) -> void:
