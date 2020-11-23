@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://scripts/gameplay/player/player.gd" type="Script" id=1]
 [ext_resource path="res://resources/textures/gameplay/player.png" type="Texture" id=2]
@@ -11,10 +11,15 @@ bounce = 1.0
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 32, 32 )
 
-[node name="Player" type="RigidBody2D"]
+[sub_resource type="Gradient" id=3]
+colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0 )
+
+[node name="Player" type="RigidBody2D" groups=[
+"player",
+]]
 mode = 2
 physics_material_override = SubResource( 1 )
-contacts_reported = 4
+contacts_reported = 5
 contact_monitor = true
 can_sleep = false
 linear_damp = 1.0
@@ -27,6 +32,21 @@ shape = SubResource( 2 )
 
 [node name="Shape" type="CollisionShape2D" parent="."]
 shape = SubResource( 2 )
+
+[node name="Trail" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 125
+lifetime = 1.25
+local_coords = false
+draw_order = 1
+emission_shape = 1
+emission_sphere_radius = 18.0
+direction = Vector2( 0, 0 )
+spread = 180.0
+gravity = Vector2( 0, 0 )
+initial_velocity = 18.0
+scale_amount = 15.0
+color_ramp = SubResource( 3 )
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 2 )
@@ -80,10 +100,14 @@ __meta__ = {
 }
 
 [node name="DashTimer" type="Timer" parent="."]
-wait_time = 0.67
+wait_time = 0.65
 one_shot = true
 
 [node name="DashCooldownTimer" type="Timer" parent="."]
-wait_time = 20.0
+wait_time = 10.0
+one_shot = true
+
+[node name="StunTimer" type="Timer" parent="."]
+wait_time = 2.0
 one_shot = true
 [connection signal="body_entered" from="." to="." method="_on_Player_body_entered"]
