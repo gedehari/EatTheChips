@@ -17,6 +17,8 @@ var enet : NetworkedMultiplayerENet
 # Contains registered players.
 var players : Dictionary = {}
 
+# Track current state with enums.
+# Idle: in lobby, Init: when init, Game: when in game.
 enum {
 	STATE_IDLE,
 	STATE_INITIALIZE,
@@ -55,8 +57,10 @@ func _on_peer_disconnected(id : int) -> void:
 	call_deferred("_unregister_player", id)
 	
 	if get_tree().is_network_server():
+		# Abort when in the middle of initialization
 		if state == STATE_INITIALIZE:
 			rpc("_abort_initialize_game")
+		# When in game, execute end game function everywhere
 		elif state == STATE_GAME:
 			rpc("_end_game")
 
@@ -64,12 +68,14 @@ func _on_peer_disconnected(id : int) -> void:
 
 func _on_connected() -> void:
 	print("Connected to server.")
+	# Request server to register itself, passing along player info.
 	rpc_id(1, "_register_player", get_tree().get_network_unique_id(), Global.player_info, false)
 
 
 func _on_disconnected() -> void:
 	print("Disconnected from server.")
 	
+	# When in game, end it immediately.
 	if state == STATE_GAME:
 		_end_game()
 
@@ -114,6 +120,7 @@ func close_network() -> void:
 ## Lobby management
 
 remote func _register_player(id : int, player_info : Dictionary, is_ready : bool) -> void:
+	# This is the structure inside the players dictionary.
 	players[id] = {
 		"player_info" : player_info,
 		"ready" : false,
@@ -149,6 +156,7 @@ remote func ready_player(id : int, is_ready) -> void:
 			if rd:
 				ready_counter += 1
 		if players.size() > 1 and ready_counter == players.size():
+			# Immediately pre initialize the game.
 			rpc("_pre_initialize_game")
 	
 	emit_signal("player_ready_changed")
@@ -165,6 +173,7 @@ remotesync func _pre_initialize_game() -> void:
 
 
 remote func _initialize_game() -> void:
+	# Server will remote call initialize game to all players except the server.
 	if get_tree().is_network_server() and players.size() > 1:
 		for target_id in players:
 			if target_id != 1:
@@ -172,6 +181,7 @@ remote func _initialize_game() -> void:
 	
 	state = STATE_GAME
 	get_tree().current_scene.queue_free()
+	# Change scene to stage. Stage will take over the management.
 	SceneLoader.load_scene("res://scripts/gameplay/stage/stage.tscn")
 
 

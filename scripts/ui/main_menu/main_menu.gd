@@ -1,7 +1,7 @@
 extends Control
 
 var screens : Dictionary = {
-	"lol" : null
+	
 }
 
 
