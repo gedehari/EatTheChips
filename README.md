@@ -17,7 +17,7 @@ We started developing in November 2020. Hopefully we can finish it in a few mont
 What we have so far:
 
 * Simple player mechanics has been implemented.
-* Currently you can play together, although there is no objective and there is no game modes (also cannot stun other players).
+* Currently you can play together, although there is no objective and there is no game modes.
 * Lobby implementation is about 75% done, but the UI is still very primitive. Will improve it after prototype release.
 
 Prototype will be available in v.0.0-prototype.
