@@ -1,7 +1,13 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scripts/gameplay/level/level.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scripts/gameplay/stage/stage.gd" type="Script" id=2]
+[ext_resource path="res://resources/fonts/NotoSansUI_Regular.ttf" type="DynamicFontData" id=3]
+
+[sub_resource type="DynamicFont" id=1]
+size = 50
+use_filter = true
+font_data = ExtResource( 3 )
 
 [node name="Stage" type="Node"]
 script = ExtResource( 2 )
@@ -15,3 +21,27 @@ current = true
 
 [node name="UI" type="CanvasLayer" parent="."]
 layer = 2
+
+[node name="Countdown" type="Label" parent="UI"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -99.0
+margin_top = 60.6071
+margin_right = 98.0
+margin_bottom = 129.607
+rect_pivot_offset = Vector2( 98, 34 )
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_constants/shadow_offset_x = 2
+custom_constants/shadow_offset_y = 2
+text = "3"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tween" type="Tween" parent="UI"]
+
+[node name="CountdownTimer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true

@@ -21,6 +21,8 @@ var is_master : bool = false
 # It's not like I'm creating a server everytime I want to test the player.
 var test_mode : bool = false
 
+var can_move : bool = false
+
 var la_rot : float
 var vel : Vector2
 
@@ -36,6 +38,7 @@ func _ready() -> void:
 	if get_tree().current_scene == self:
 		# If this is the current scene, enable test mode.
 		test_mode = true
+		can_move = true
 	
 	trail.emitting = false
 	arrow.visible = is_master or test_mode
@@ -57,17 +60,21 @@ func _physics_process(delta: float) -> void:
 				is_stunned = false
 				modulate.v = 1
 		else:
-			move()
+			if can_move: move()
 		
 		if Network.enet:
 			# Send state every physics process. I don't know if this is a good idea or not.
-			rpc_unreliable("_set_state", position, linear_velocity, applied_force, modulate, trail.emitting)
+			rpc_unreliable("_set_state", position, linear_velocity, applied_force)
+			rpc("_set_state_reliable", modulate, trail.emitting)
 
-# Set state of player. Sent to puppet nodes.
-puppet func _set_state(pos : Vector2, vel : Vector2, force : Vector2, mod : Color, t_emit : bool) -> void:
-	position = pos
-	linear_velocity = vel
-	applied_force = force
+# Set state of player unreliably, the ones that doesn't have to arrive.
+puppet func _set_state(pos : Vector2, vel : Vector2, force : Vector2) -> void:
+	position         = pos
+	linear_velocity  = vel
+	applied_force    = force
+
+# Set state of player reliably, the ones that needs to arrive.
+puppet func _set_state_reliable(mod : Color, t_emit : bool) -> void:
 	modulate = mod
 	trail.emitting = t_emit
 
@@ -108,8 +115,8 @@ remote func stun(id : int = 0) -> void:
 func _on_Player_body_entered(body: Node) -> void:
 	if is_master or test_mode:
 		if is_dashing:
-			if body.is_in_group("player"):
-				body.stun(body.get_network_master()) if is_master else null
+			if body.is_in_group("player"): if is_master:
+				body.stun(body.get_network_master())
 			# Stop dash if player hits anything.
 			dash_timer.stop()
 
