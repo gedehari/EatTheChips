@@ -96,7 +96,7 @@ func move() -> void:
 
 # Stun this player, likely be called from another player.
 remote func stun(id : int = 0) -> void:
-	if not is_network_master():
+	if not is_master:
 		rpc_id(id, "stun")
 	else:
 		is_stunned = true
@@ -106,11 +106,11 @@ remote func stun(id : int = 0) -> void:
 
 
 func _on_Player_body_entered(body: Node) -> void:
-	# Stop dash if player hits anything.
-	if is_network_master():
+	if is_master or test_mode:
 		if is_dashing:
 			if body.is_in_group("player"):
-				body.stun(body.get_network_master())
+				body.stun(body.get_network_master()) if is_master else null
+			# Stop dash if player hits anything.
 			dash_timer.stop()
 
 
