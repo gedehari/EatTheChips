@@ -18,8 +18,6 @@ What we have so far:
 * Currently you can play together, although there is no objective and there is no game modes.
 * Lobby implementation is about 75% done, but the UI is still very primitive. Will improve it after prototype release.
 
-I am leaving this project for now. Hopefully I will return.
-
 ## Team
 
 UncreativeAri (me) is doing all the work (programming and art), and my buddy Dyozune is helping with some parts of the game. (oh and also a motivator, thanks).
